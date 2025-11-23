@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Bites - Premium Dining Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        glass: "rgba(0, 0, 0, 0.6)",
+                        glassBorder: "rgba(250, 204, 21, 0.2)",
+                        glassHighlight: "rgba(250, 204, 21, 0.1)",
+                        primary: "#FACC15", /* Bright Yellow/Gold */
+                        primaryDark: "#CA8A04", /* Darker Gold */
+                        secondary: "#18181b", /* Zinc 900 */
+                        accent: "#FFFFFF" /* White */
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Glassmorphism Engine - Yellow/Black Theme */
+        body {
+            background-color: #050505;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(250, 204, 21, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(202, 138, 4, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(50, 50, 50, 0.3) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(0, 0, 0, 1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(250, 204, 21, 0.15); /* Yellow tinted border */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.6) 0%, rgba(10, 10, 10, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+            border-color: rgba(250, 204, 21, 0.4);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 
+                        0 0 20px rgba(250, 204, 21, 0.2); /* Gold glow on hover */
+        }
+
+        /* Text Glows */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(250, 204, 21, 0.3), 0 0 20px rgba(250, 204, 21, 0.1);
+        }
+        
+        .neon-border {
+            position: relative;
+        }
+        .neon-border::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: #FACC15;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px #FACC15;
+        }
+        .neon-border:hover::after {
+            width: 100%;
+        }
+
+        /* Loading Shimmer Effect */
+        .loading-shimmer {
+            background: linear-gradient(to right, rgba(255,255,255,0.05) 8%, rgba(250, 204, 21, 0.15) 18%, rgba(255,255,255,0.05) 33%);
+            background-size: 1000px 100%;
+            animation: shimmer 1.5s infinite linear;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(250, 204, 21, 0.3); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(250, 204, 21, 0.6); 
+        }
+
+        /* Floating Orbs for Depth */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.4;
+        }
+        
+        /* Smooth selection */
+        ::selection {
+            background: #FACC15;
+            color: #000000;
+        }
+
+        /* Markdown Styles for AI Output */
+        .prose-custom strong { color: #FACC15; font-weight: 700; }
+        .prose-custom ul { list-style-type: disc; padding-left: 1.5em; margin-top: 0.5em; margin-bottom: 0.5em; }
+        .prose-custom li { margin-bottom: 0.25em; color: #e5e7eb; }
+        .prose-custom p { margin-bottom: 0.75em; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Background Orbs (Yellow/Gold/Dark) -->
+    <div class="orb w-96 h-96 bg-yellow-500/20 top-0 left-0 animate-pulse-slow"></div>
+    <div class="orb w-80 h-80 bg-orange-500/10 bottom-0 right-0 animate-float"></div>
+    <div class="orb w-64 h-64 bg-white/5 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b-0 rounded-b-2xl transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.4)]">
+                        <i class="fas fa-utensils text-black text-lg"></i>
+                    </div>
+                    <span class="font-serif font-bold text-2xl tracking-wider text-white">URBAN<span class="text-primary">BITES</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#about" class="neon-border px-3 py-2 rounded-md text-sm font-medium hover:text-white text-gray-300 transition-colors">Story</a>
+                        <a href="#menu" class="neon-border px-3 py-2 rounded-md text-sm font-medium hover:text-white text-gray-300 transition-colors">Menu Highlights</a>
+                        <a href="#gallery" class="neon-border px-3 py-2 rounded-md text-sm font-medium hover:text-white text-gray-300 transition-colors">Gallery</a>
+                        <a href="#contact" class="px-6 py-2 rounded-full bg-yellow-400/10 hover:bg-yellow-400/20 border border-yellow-400/20 text-yellow-400 hover:text-white transition-all hover:scale-105 backdrop-blur-md">Book Table</a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden glass-panel border-t border-white/10" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-white/10">Story</a>
+                <a href="#menu" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-white/10">Menu</a>
+                <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-white/10">Gallery</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-primary">Book Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Hero Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyCQW0C5X6lW8TTn2PJFeMdv-dbQoDrBQrlZW01LeSA5kPPCJtbVOdgB4oaimPYrRrGmbqOVrRLKXVQjHp4fXYWEyHUSM0SwsgKDOYQ7Fn7SHjThCVWbsZbjiwBwBvGSor3pHE=s680-w680-h510-rw" 
+                 class="w-full h-full object-cover opacity-30 scale-110 animate-pulse-slow grayscale" 
+                 alt="Urban Bites Ambience"
+                 onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto mt-16">
+            <div class="inline-block px-4 py-1 mb-6 rounded-full glass-panel border border-yellow-500/30 text-yellow-400 text-sm tracking-widest uppercase font-bold animate-float">
+                Welcome to Jalahalli's Finest
+            </div>
+            <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight text-glow">
+                Where Tradition <br/> Meets <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600">Innovation</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto font-light">
+                Experience the soulful fusion of North Indian richness, fiery Tandoor, and authentic Shawarmas in an ambiance designed for memories.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <!-- Primary Button: Gold Background, Black Text -->
+                <a href="#contact" class="px-8 py-4 rounded-full bg-primary hover:bg-yellow-300 text-black font-bold tracking-wide shadow-[0_0_20px_rgba(250,204,21,0.4)] hover:shadow-[0_0_40px_rgba(250,204,21,0.6)] hover:scale-105 transition-all transform flex items-center justify-center gap-2">
+                    <i class="fab fa-whatsapp"></i> Reserve Table
+                </a>
+                <!-- Secondary Button: Glass with Gold Border -->
+                <a href="https://www.zomato.com/bangalore/urban-bites-jalahalli-bangalore" target="_blank" class="px-8 py-4 rounded-full glass-panel hover:bg-white/5 border border-white/20 hover:border-yellow-400/50 text-white font-bold tracking-wide transition-all hover:scale-105 flex items-center justify-center gap-2 group">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Zomato_Logo.svg" class="h-5 w-auto filter invert opacity-80 group-hover:opacity-100 transition-opacity" alt="Zomato"> Order Online
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Zomato Spotlight Banner -->
+    <div class="relative z-20 -mt-20 mx-4 md:mx-auto max-w-4xl">
+        <!-- Kept Red for Zomato recognition, but muted the container to fit black theme -->
+        <div class="glass-panel rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between border border-red-900/50 shadow-[0_0_30px_rgba(0,0,0,0.5)] relative overflow-hidden group">
+            <div class="absolute inset-0 bg-gradient-to-r from-red-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="flex items-center gap-4 relative z-10 mb-4 md:mb-0">
+                <div class="bg-black/50 p-3 rounded-xl border border-white/10">
+                    <i class="fas fa-star text-yellow-400 text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Zomato Spotlight</h3>
+                    <p class="text-gray-300 text-sm">Rated highly for "Perfect Shawarmas" & "Crispy Fries"</p>
+                </div>
+            </div>
+            <a href="https://www.zomato.com/bangalore/urban-bites-jalahalli-bangalore" target="_blank" class="relative z-10 px-6 py-2 bg-red-700 hover:bg-red-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2 shadow-lg">
+                View Menu <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div class="relative group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-600 to-yellow-900 rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                    <img src="https://lh3.googleusercontent.com/p/AF1QipN4Cz8EHHnARuqZYAyx_edqKuN4EDYv8HzrU1NT=s680-w680-h510-rw" 
+                         alt="Urban Bites Interior" 
+                         class="relative rounded-2xl shadow-2xl border border-white/5 w-full object-cover h-96 transform group-hover:scale-[1.01] transition-transform duration-500">
+                    
+                    <!-- Floating Badge -->
+                    <div class="absolute -bottom-6 -right-6 glass-panel p-4 rounded-xl border border-yellow-500/20 animate-float" style="animation-delay: 1s;">
+                        <p class="text-sm font-bold text-gray-400 uppercase tracking-wider">Est.</p>
+                        <p class="text-3xl font-serif font-bold text-primary">2018</p>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-primary font-bold tracking-widest uppercase mb-2">About Us</h2>
+                    <h3 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">A Culinary Haven in Jalahalli</h3>
+                    <div class="space-y-4 text-gray-300 leading-relaxed text-lg">
+                        <p>
+                            Nestled near Sapthagiri Medical College, <span class="text-white font-semibold">Urban Bites</span> is more than just a restaurant; it's a cherished spot where vibrant flavors meet warm hospitality.
+                        </p>
+                        <p>
+                            We specialize in crafting authentic <span class="text-yellow-200">North Indian curries</span>, smoky <span class="text-yellow-200">Charcoal Chicken</span>, and the city's crispest fries. Our interior is elegantly designed to provide a cozy yet refined ambiance, making every meal—whether a quick shawarma or a family feast—feel special.
+                        </p>
+                    </div>
+                    <div class="mt-8 flex gap-8">
+                        <div>
+                            <span class="block text-3xl font-bold text-white">4.1+</span>
+                            <span class="text-sm text-gray-400">Google Rating</span>
+                        </div>
+                        <div>
+                            <span class="block text-3xl font-bold text-white">100+</span>
+                            <span class="text-sm text-gray-400">Daily Happy Guests</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlights/Menu Strip -->
+    <section id="menu" class="py-20 relative overflow-hidden bg-white/5">
+        <div class="absolute top-0 left-0 w-full h-full bg-black/40 skew-y-3 transform origin-top-left"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-serif font-bold text-white mb-4">Curated Masterpieces</h2>
+                <p class="text-gray-400">Handpicked favorites that define the Urban Bites experience</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Item 1 -->
+                <div class="glass-card rounded-2xl p-6 relative group overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-fire text-6xl text-primary"></i>
+                    </div>
+                    <div class="h-48 rounded-xl bg-gray-900 mb-6 overflow-hidden relative border border-white/5">
+                        <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Tandoori" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute bottom-2 right-2 px-3 py-1 bg-black/80 backdrop-blur-md rounded-lg text-xs font-bold text-yellow-400 border border-yellow-400/30">
+                            <i class="fas fa-star"></i> MUST TRY
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Iranian Roasted Tandoori</h3>
+                    <p class="text-gray-400 mb-4">Succulent chicken marinated in exotic spices and roasted to smoky perfection. A crowd favorite.</p>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="glass-card rounded-2xl p-6 relative group overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-drumstick-bite text-6xl text-yellow-600"></i>
+                    </div>
+                    <div class="h-48 rounded-xl bg-gray-900 mb-6 overflow-hidden relative border border-white/5">
+                        <img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Shawarma" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Paneer & Chicken Shawarma</h3>
+                    <p class="text-gray-400 mb-4">Rich flavors wrapped in soft bread. Available in Peri Peri, Chipotle, and Classic styles.</p>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="glass-card rounded-2xl p-6 relative group overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-bowl-rice text-6xl text-white"></i>
+                    </div>
+                    <div class="h-48 rounded-xl bg-gray-900 mb-6 overflow-hidden relative border border-white/5">
+                        <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Biryani" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Signature Egg Biryani</h3>
+                    <p class="text-gray-400 mb-4">A harmonious blend of fragrant spices, long-grain rice, and perfectly cooked eggs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW GEMINI AI SECTION -->
+    <section id="ai-concierge" class="py-20 relative bg-gradient-to-b from-black/80 to-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 relative">
+                 <span class="text-primary font-bold tracking-widest uppercase text-xs mb-2 block animate-pulse-slow">Experience Innovation</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6 text-glow">Smart Culinary Companion</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-6"></div>
+                <p class="text-gray-300 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+                    Personalized recommendations and party planning.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Feature 1: The Flavor Matcher -->
+                <div class="glass-panel p-8 rounded-3xl border-t border-yellow-400/20 relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-yellow-500/20 rounded-full blur-3xl group-hover:bg-yellow-500/30 transition-all"></div>
+                    
+                    <h3 class="text-2xl font-bold text-white mb-2 flex items-center gap-2"><i class="fas fa-robot text-primary"></i> The Flavor Matcher</h3>
+                    <p class="text-gray-400 text-sm mb-6">Can't decide? Tell our AI Chef your mood, and we'll suggest the perfect Urban Bites meal.</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">What are you craving?</label>
+                            <input type="text" id="ai-mood" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="e.g. Something spicy, rich, and perfect for a rainy day...">
+                        </div>
+                        
+                        <button onclick="askAIChef()" id="btn-chef" class="w-full py-4 rounded-xl bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-black font-bold shadow-lg shadow-yellow-500/20 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-wand-magic-sparkles"></i> Get Chef's Recommendation ✨
+                        </button>
+                    </div>
+
+                    <!-- Output Area -->
+                    <div id="chef-output" class="mt-6 hidden">
+                        <div class="p-4 rounded-xl bg-white/5 border border-white/10 relative">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+                            <h4 class="text-primary font-bold text-sm mb-2 flex items-center gap-2"><i class="fas fa-utensils"></i> Chef Suggests:</h4>
+                            <div id="chef-text" class="text-gray-300 text-sm leading-relaxed prose-custom"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Party Planner -->
+                <div class="glass-panel p-8 rounded-3xl border-t border-purple-500/20 relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-all"></div>
+                    
+                    <h3 class="text-2xl font-bold text-white mb-2 flex items-center gap-2"><i class="fas fa-glass-cheers text-purple-400"></i> Party Planner</h3>
+                    <p class="text-gray-400 text-sm mb-6">Hosting a gathering? Let AI draft a menu and a WhatsApp invite for your guests.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Occasion</label>
+                            <input type="text" id="ai-occasion" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-all" placeholder="e.g. Birthday">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Guests</label>
+                            <input type="number" id="ai-guests" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 transition-all" placeholder="5">
+                        </div>
+                    </div>
+                    
+                    <button onclick="planParty()" id="btn-party" class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-700 to-purple-600 hover:from-purple-600 hover:to-purple-500 text-white font-bold shadow-lg shadow-purple-500/20 transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-calendar-check"></i> Generate Plan ✨
+                    </button>
+
+                    <!-- Output Area -->
+                    <div id="party-output" class="mt-6 hidden">
+                        <div class="p-4 rounded-xl bg-white/5 border border-white/10 relative">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-purple-400 font-bold text-sm"><i class="fas fa-list-check"></i> The Plan:</h4>
+                                <button onclick="copyInvite()" class="text-xs bg-white/10 hover:bg-white/20 px-2 py-1 rounded transition-colors" title="Copy Invitation"><i class="far fa-copy"></i> Copy Invite</button>
+                            </div>
+                            <div id="party-text" class="text-gray-300 text-sm leading-relaxed prose-custom"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-serif font-bold text-white mb-12 text-center">Visual Feast</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+                <!-- Large Item -->
+                <div class="col-span-2 row-span-2 rounded-2xl overflow-hidden glass-card p-1 group border-none bg-transparent">
+                    <div class="w-full h-full rounded-xl overflow-hidden relative border border-white/10">
+                        <img src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyCQW0C5X6lW8TTn2PJFeMdv-dbQoDrBQrlZW01LeSA5kPPCJtbVOdgB4oaimPYrRrGmbqOVrRLKXVQjHp4fXYWEyHUSM0SwsgKDOYQ7Fn7SHjThCVWbsZbjiwBwBvGSor3pHE=s680-w680-h510-rw" alt="Ambience" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100">
+                    </div>
+                </div>
+                
+                <!-- Small Items -->
+                <div class="rounded-2xl overflow-hidden glass-card p-1 group border-none bg-transparent">
+                    <div class="w-full h-full rounded-xl overflow-hidden border border-white/10">
+                         <img src="https://lh3.googleusercontent.com/p/AF1QipN4Cz8EHHnARuqZYAyx_edqKuN4EDYv8HzrU1NT=s680-w680-h510-rw" alt="Food" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100">
+                    </div>
+                </div>
+                <div class="rounded-2xl overflow-hidden glass-card p-1 group border-none bg-transparent">
+                    <div class="w-full h-full rounded-xl overflow-hidden border border-white/10">
+                        <img src="https://lh3.googleusercontent.com/p/AF1QipPeEmN6e4YOnMMtGn5Ca4VfLYohdMxx0ftsz4PW=s680-w680-h510-rw" alt="Food" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="py-20 relative">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-serif font-bold text-white mb-16 text-center">Loved by Locals</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="glass-panel p-8 rounded-2xl relative">
+                    <div class="absolute -top-4 left-8 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-black text-xl shadow-lg shadow-yellow-500/30">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4 gap-1 text-sm">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-300 italic mb-6">"Many customers mentioned that the French fries were crisp and golden, making them an irresistible side dish. A must visit!"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white font-bold border border-white/10">R</div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Reviewer</h4>
+                            <span class="text-xs text-gray-500">Google Review</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="glass-panel p-8 rounded-2xl relative transform md:-translate-y-4 border-yellow-500/30">
+                    <div class="absolute -top-4 left-8 w-10 h-10 bg-white rounded-full flex items-center justify-center text-black text-xl shadow-lg">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4 gap-1 text-sm">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-300 italic mb-6">"The Iranian Roasted Tandoori was highlighted as a must-try dish. Thoroughly enjoyed the experience and the rich flavors."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white font-bold border border-white/10">A</div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Anjali K.</h4>
+                            <span class="text-xs text-gray-500">Local Guide</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="glass-panel p-8 rounded-2xl relative">
+                    <div class="absolute -top-4 left-8 w-10 h-10 bg-yellow-600 rounded-full flex items-center justify-center text-white text-xl shadow-lg">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <div class="flex text-yellow-400 mb-4 gap-1 text-sm">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-gray-300 italic mb-6">"Praised the paneer shawarma for its rich flavors. The egg biryani is a perfect balance of masala and fragrant rice."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white font-bold border border-white/10">S</div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Suresh M.</h4>
+                            <span class="text-xs text-gray-500">Foodie</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Reservation -->
+    <section id="contact" class="py-20 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <!-- Form Side -->
+                    <div class="p-10">
+                        <h2 class="text-3xl font-serif font-bold text-white mb-2">Reserve Your Spot</h2>
+                        <p class="text-gray-400 mb-8">Book a table quickly via WhatsApp</p>
+
+                        <form id="bookingForm" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Name</label>
+                                <input type="text" id="name" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-colors" placeholder="Your Name">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Date</label>
+                                    <input type="date" id="date" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors [color-scheme:dark]">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-300 mb-2">Time</label>
+                                    <input type="time" id="time" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors [color-scheme:dark]">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">Guests</label>
+                                <select id="guests" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary transition-colors [&>option]:bg-gray-800">
+                                    <option value="2">2 People</option>
+                                    <option value="3">3 People</option>
+                                    <option value="4">4 People</option>
+                                    <option value="5+">5+ People</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-4 rounded-lg shadow-lg hover:shadow-[#25D366]/40 transition-all flex items-center justify-center gap-2">
+                                <i class="fab fa-whatsapp text-xl"></i> Confirm via WhatsApp
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Map & Info Side -->
+                    <div class="relative bg-gray-900 min-h-[400px] md:min-h-full">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.635832049918!2d77.50271957484435!3d13.058866987264663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3d84988775f9%3A0xc3c945145b2b2b1a!2sUrban%20Bites!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0; filter: grayscale(100%) contrast(1.2) brightness(0.8);" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade"
+                            class="absolute inset-0">
+                        </iframe>
+                        
+                        <!-- Clickable Info Panel -->
+                        <a href="https://www.google.com/maps/search/urban+bites/@13.0712031,77.5052945,14z?entry=s&sa=X&ved=1t%3A199789" 
+                           target="_blank" 
+                           class="absolute bottom-0 left-0 w-full glass-panel p-6 border-t border-white/10 hover:bg-black/90 transition-all group cursor-pointer block">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-white font-bold group-hover:text-primary transition-colors">Visit Us</h3>
+                                <i class="fas fa-location-arrow text-gray-400 group-hover:text-primary transition-colors transform group-hover:-translate-y-1 group-hover:translate-x-1 duration-300"></i>
+                            </div>
+                            <p class="text-sm text-gray-300 mb-1 group-hover:text-white transition-colors"><i class="fas fa-map-marker-alt text-primary w-5"></i> 195, AGB Layout, Chikkasandra, Jalahalli</p>
+                            <p class="text-sm text-gray-300 mb-1"><i class="fas fa-clock text-primary w-5"></i> Mon-Sun: 11:30 AM - 11:30 PM</p>
+                            <p class="text-sm text-gray-300"><i class="fas fa-phone text-primary w-5"></i> +91 63602 83820</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center border-t border-white/5 text-gray-500 text-sm">
+        <p>&copy; 2024 Urban Bites Bangalore. All Rights Reserved.</p>
+        <p class="mt-2 text-xs">Designed with <i class="fas fa-heart text-yellow-500"></i> & Glass</p>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/916360283820" target="_blank" class="fixed bottom-6 right-6 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center text-white text-3xl shadow-[0_0_20px_rgba(37,211,102,0.5)] z-50 hover:scale-110 transition-transform hover:shadow-[0_0_30px_rgba(37,211,102,0.8)] animate-pulse-slow">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Logic -->
+    <script>
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-black/90', 'shadow-lg');
+                nav.classList.remove('glass-panel');
+            } else {
+                nav.classList.add('glass-panel');
+                nav.classList.remove('bg-black/90', 'shadow-lg');
+            }
+        });
+
+        // WhatsApp Form Handler
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const guests = document.getElementById('guests').value;
+            
+            if(!name || !date || !time) {
+                alert('Please fill in all details.');
+                return;
+            }
+
+            const text = `Hello Urban Bites! I would like to reserve a table.%0A%0AName: ${name}%0ADate: ${date}%0ATime: ${time}%0AGuests: ${guests}`;
+            
+            window.open(`https://wa.me/916360283820?text=${text}`, '_blank');
+        });
+
+        // Set min date to today
+        document.getElementById('date').min = new Date().toISOString().split("T")[0];
+    </script>
+</body>
+</html>
